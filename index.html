@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Google Places Lead Finder</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="panel">
+        <div class="heading">
+          <p class="eyebrow">n8n lead workflow</p>
+          <h1>Google Places Lead Finder</h1>
+          <p class="summary">
+            Gửi campaign sang n8n Webhook để tìm lead B2B từ Google Places API New và ghi vào Google Sheet.
+          </p>
+        </div>
+
+        <form id="leadForm" class="form" novalidate>
+          <fieldset>
+            <legend>Cấu hình webhook</legend>
+
+            <label for="webhookUrl">
+              n8n production webhook URL
+              <input
+                id="webhookUrl"
+                name="webhookUrl"
+                type="url"
+                placeholder="https://YOUR_N8N_DOMAIN/webhook/google-places-lead-finder"
+                autocomplete="url"
+                required
+              >
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Campaign</legend>
+
+            <div class="grid two">
+              <label for="campaignName">
+                Tên campaign
+                <input
+                  id="campaignName"
+                  name="campaign_name"
+                  type="text"
+                  placeholder="aromaland_laundry_hcm"
+                  autocomplete="off"
+                  required
+                >
+              </label>
+
+              <label for="keyword">
+                Keyword
+                <input
+                  id="keyword"
+                  name="keyword"
+                  type="text"
+                  list="keywordOptions"
+                  placeholder="tiem giat say"
+                  autocomplete="off"
+                  required
+                >
+              </label>
+            </div>
+
+            <datalist id="keywordOptions">
+              <option value="tiem giat say"></option>
+              <option value="tiem giat ui"></option>
+              <option value="laundry"></option>
+              <option value="spa"></option>
+              <option value="khach san mini"></option>
+              <option value="homestay"></option>
+              <option value="salon toc"></option>
+            </datalist>
+
+            <label for="location">
+              Location ưu tiên
+              <input
+                id="location"
+                name="location"
+                type="text"
+                placeholder="Phuong Ben Nghe, Ho Chi Minh City, Vietnam"
+                autocomplete="off"
+              >
+              <span class="field-note">
+                Nhập theo địa chỉ mới sau sáp nhập, có thể tra cứu tại
+                <a href="https://diachi.io/" target="_blank" rel="noopener">diachi.io</a>.
+              </span>
+            </label>
+
+            <div class="grid two">
+              <label for="province">
+                Tỉnh / thành phố
+                <select
+                  id="province"
+                  name="province"
+                >
+                  <option value="">Đang tải tỉnh / thành phố...</option>
+                </select>
+              </label>
+
+              <label for="ward">
+                Phường / xã
+                <select
+                  id="ward"
+                  name="ward"
+                  disabled
+                >
+                  <option value="">Chọn tỉnh / thành phố trước</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="grid three">
+              <label for="maxResults">
+                Số lead tối đa
+                <input
+                  id="maxResults"
+                  name="max_results"
+                  type="number"
+                  min="1"
+                  max="20"
+                  step="1"
+                  value="20"
+                  required
+                >
+              </label>
+
+              <label for="sheetId">
+                Google Sheet ID
+                <input
+                  id="sheetId"
+                  name="sheet_id"
+                  type="text"
+                  placeholder="optional"
+                  autocomplete="off"
+                >
+              </label>
+
+              <label for="sheetName">
+                Sheet/tab name
+                <input
+                  id="sheetName"
+                  name="sheet_name"
+                  type="text"
+                  value="Leads"
+                  autocomplete="off"
+                >
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="actions">
+            <button id="submitButton" type="submit">Gửi campaign</button>
+            <button id="resetButton" type="button" class="secondary">Xóa form</button>
+          </div>
+
+          <output id="statusBox" class="status" role="status" aria-live="polite"></output>
+        </form>
+      </section>
+
+      <aside class="preview" aria-label="Payload preview">
+        <div class="preview-header">
+          <p class="eyebrow">Payload</p>
+          <button id="copyPayloadButton" type="button" class="secondary small">Copy</button>
+        </div>
+        <pre id="payloadPreview">{}</pre>
+      </aside>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -7,12 +7,11 @@
   const statusBox = document.querySelector('#statusBox');
 
   const storageKey = 'googlePlacesLeadFinderForm';
-  const configStorageKey = 'googlePlacesLeadFinderConfig';
+  const submitEndpoint = '/.netlify/functions/submit';
   const provincesApiBase = 'https://provinces.open-api.vn/api/v2';
   const provincesCacheKey = 'googlePlacesLeadFinderProvincesV2';
 
   const fields = {
-    webhookUrl: document.querySelector('#webhookUrl'),
     campaignName: document.querySelector('#campaignName'),
     keyword: document.querySelector('#keyword'),
     location: document.querySelector('#location'),
@@ -95,19 +94,12 @@
       sheetName: fields.sheetName.value
     };
 
-    const config = {
-      webhookUrl: fields.webhookUrl.value
-    };
-
     localStorage.setItem(storageKey, JSON.stringify(draft));
-    localStorage.setItem(configStorageKey, JSON.stringify(config));
   }
 
   function loadSavedValues() {
     const draft = JSON.parse(localStorage.getItem(storageKey) || '{}');
-    const config = JSON.parse(localStorage.getItem(configStorageKey) || '{}');
 
-    fields.webhookUrl.value = config.webhookUrl || '';
     fields.campaignName.value = draft.campaignName || 'aromaland_laundry_hcm';
     fields.keyword.value = draft.keyword || 'tiem giat say';
     fields.location.value = draft.location || '';
@@ -203,10 +195,6 @@
   }
 
   function validatePayload(payload) {
-    if (!trimValue(fields.webhookUrl)) {
-      return 'Vui lòng nhập n8n production webhook URL.';
-    }
-
     if (!payload.campaign_name) {
       return 'Vui lòng nhập tên campaign.';
     }
@@ -240,10 +228,10 @@
 
     saveDraft();
     setLoading(true);
-    showStatus('info', 'Đang gửi payload sang n8n Webhook...');
+    showStatus('info', 'Đang gửi payload sang Netlify Function...');
 
     try {
-      const response = await fetch(trimValue(fields.webhookUrl), {
+      const response = await fetch(submitEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
